@@ -1,65 +1,141 @@
-import Image from "next/image";
+/**
+ * Dashboard Page (Home)
+ * Displays an overview of all job applications with the ability to add new ones
+ * Protected route - requires authentication
+ */
+
+import { Suspense } from "react";
+import { JobForm } from "./components/job-form";
+import { JobsList } from "./components/jobs-list";
+import StatsCards from "./components/stats-cards";
+import Loading from "./loading";
+import type { Metadata } from "next";
+import { Box, Typography } from "@mui/material";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import { ProtectedPage } from "@/lib/protected-page";
+
+export const metadata: Metadata = {
+  title: "Dashboard - JobTracker",
+  description: "Manage all your job applications in one place",
+};
+
+function DashboardContent() {
+  return (
+    <Box>
+      {/* Page Header */}
+      <Box
+        sx={{
+          mb: 8,
+          background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+          borderRadius: "20px",
+          px: { xs: 3, sm: 4, md: 5 },
+          py: { xs: 4, sm: 5, md: 6 },
+          color: "white",
+          position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: "-40%",
+            right: "-20%",
+            width: "500px",
+            height: "500px",
+            borderRadius: "50%",
+            background: "rgba(255, 255, 255, 0.1)",
+            zIndex: 0,
+          },
+        }}
+      >
+        <Box sx={{ position: "relative", zIndex: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <TrendingUpIcon sx={{ fontSize: "2.5rem" }} />
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 800,
+                letterSpacing: "-1px",
+              }}
+            >
+              Welcome Back!
+            </Typography>
+          </Box>
+          <Typography
+            variant="body1"
+            sx={{
+              opacity: 0.95,
+              fontSize: "1.1rem",
+              maxWidth: "600px",
+            }}
+          >
+            Track your job applications, monitor progress, and land your dream role. Let's build your career together! 🚀
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Stats Section */}
+      <Suspense fallback={<Loading />}>
+        <StatsCards />
+      </Suspense>
+
+      {/* Job Form Component */}
+      <Box sx={{ mb: 8 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+            mb: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
+          <Box
+            sx={{
+              width: "4px",
+              height: "28px",
+              borderRadius: "2px",
+              background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+            }}
+          />
+          Add New Application
+        </Typography>
+        <JobForm />
+      </Box>
+
+      {/* Jobs List Section */}
+      <Box>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+            mb: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
+          <Box
+            sx={{
+              width: "4px",
+              height: "28px",
+              borderRadius: "2px",
+              background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+            }}
+          />
+          Your Applications
+        </Typography>
+        <Suspense fallback={<Loading />}>
+          <JobsList />
+        </Suspense>
+      </Box>
+    </Box>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <ProtectedPage>
+      <DashboardContent />
+    </ProtectedPage>
   );
 }
